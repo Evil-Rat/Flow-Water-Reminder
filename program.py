@@ -2,10 +2,10 @@ import schedule
 import time 
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import random
 import threading
-import desktop_notifier as dn
-import asyncio 
+from plyer import notification
 
 
 def block(event): #stops unwanted events
@@ -15,9 +15,8 @@ def block(event): #stops unwanted events
 
 def validator(input):
     if not input.isdigit() or int(input) > 999 or int(input) < 1 or input == None:
-        #add a thing that says you entered a wrong number and it's now set to the default
-        input = 20
-        return input
+        tk.messagebox.showerror("Wrong input", "Please enter a number from 1 to 999")
+        return -1
     else:
         return int(input)
     
@@ -26,31 +25,35 @@ def set_interval():
     global call_job
     global current_interval
     new_interval = validator(interval_pick.get())
-    interval.set(new_interval)
-    schedule.cancel_job(call_job)
-    call_job = schedule.every(new_interval).seconds.do(call) # remember to change this to minutes
-    interval_pick.delete(0,tk.END)
 
-    current_interval.destroy()
-    current_interval = tk.Label(text=f"current interval: {interval.get()} minutes" , pady = "10", font=("arial",11,"bold"))
-    current_interval.pack()
+    if new_interval == -1: # let the interval be as it was 
+        pass
+    else:
+
+        interval.set(new_interval)
+        schedule.cancel_job(call_job)
+        call_job = schedule.every(new_interval).seconds.do(call) # remember to change this to minutes
+        interval_pick.delete(0,tk.END)
+
+        current_interval.destroy()
+        current_interval = tk.Label(text=f"current interval: {interval.get()} minutes" , pady = "10", font=("arial",11,"bold"))
+        current_interval.pack()
 
 
 
-notifier_instance = dn.DesktopNotifier(app_name = "Flow")
 
 
 def call():
-    motivations = ["nice work take a breather and drink some water", "good going, stay hydrated!", "it sure is hot in here, some water would be nice...", "did you know water can make you not thirsty?",
-                   "the human body consists of about 65% water, go drink some!", "GO DRINK SOME WATER", "Your body called... it needs water", "Hey, time for a water break!", 
-                   "Hey champ, fix that posture and drink some water!", "psst.. hey... CHUG DAT WATER"]
-    
-    
-    async def notifier():
-        await notifier_instance.send(title = "water break", message = "hi")
+    titles = ["Water reminder", "Drink some water", "Water check", "Water police", "Water alert", "Water break"]
 
+
+    motivations = ["nice work take a breather and drink some water 😀", "good going, stay hydrated!", "it sure is hot in here, some water would be nice...", "did you know water can make you not thirsty? 🤯",
+                   "the human body consists of about 65% water, go drink some! 👽", "GO. DRINK. SOME. WATER. 🔥", "Your body called... it needs water", "Hey, time for a water break!", 
+                   "Hey champ, fix that posture and drink some water!", "psst.. hey... CHUG DAT WATER 🔥","drink water in french is bois de l'eau", "Hey, I love you 😘, now go drink some water"
+                   "Time to hydrate like there's no tomorrow 😤", "Hey,drink a cup of water you deserve it 🤩" , "What're you still doing here, water is waiting 😆"]
+    
+    notification.notify(title=random.choice(titles), message=random.choice(motivations), app_name="Flow", app_icon="water-drop.ico", timeout=5)
         
-    asyncio.run(notifier())
     print(random.choice(motivations)) # change this to give system notification
 
 
@@ -67,14 +70,11 @@ root.resizable(height = False, width = False)
 
 
 ttk.Style().configure("my.TButton", font=("Arial",12,"bold"))
-# button1 = ttk.Button(menu, text ="click now", style="my.TButton")
-# button1.pack(fill="x" ,side="left")
-# button2 = ttk.Button(menu, text = "place holder" , style="my.TButton") 
-# button2.pack(fill="x",)   
 
 interval_section = tk.Frame(root)
 interval_section.pack()
-interval = tk.IntVar(root, value=5)
+
+interval = tk.IntVar(root, value=20)
 
 interval_text= tk.Label(interval_section, text="reminder interval (min) :", font=("Arial",15,"bold"))
 interval_text.pack(side="left")
@@ -101,4 +101,3 @@ threading.Thread(target=check, daemon=True).start()
 root.mainloop()
 
 #add dark mode
-# integrate system notifications
