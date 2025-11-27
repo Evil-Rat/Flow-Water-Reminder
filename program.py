@@ -55,7 +55,7 @@ def set_interval():
 
         current_interval.config(text=f"current interval: {interval.get()} minutes")
 
-        with open("interval.txt", "w") as f:
+        with open("assets/interval.txt", "w") as f:
             f.write(str(new_interval))
 
 
@@ -69,7 +69,7 @@ def call():
                    "Hey champ, fix that posture and drink some water!", "psst.. hey... CHUG DAT WATER 🔥","drink water in french is bois de l'eau", "Hey, I love you 😘, now go drink some water",
                    "Time to hydrate like there's no tomorrow 😤", "Hey, drink a cup of water you deserve it 🤩" , "What're you still doing here, water is waiting 😆"]
     
-    notification.notify(title=random.choice(titles), message=random.choice(motivations), app_name="Flow", app_icon="water-drop.ico", timeout=5)
+    notification.notify(title=random.choice(titles), message=random.choice(motivations), app_name="Flow", app_icon="assets/water-drop.ico", timeout=5)
 
 
 root = tk.Tk()
@@ -80,7 +80,7 @@ root.geometry("500x200")
 root.resizable(height = False, width = False)
 root.bind("<Unmap>", hide) #hides window completely on minimize
 
-main_photo = Image.open("app-icon.png")
+main_photo = Image.open("assets/app-icon.png")
 main_photo_tk = ImageTk.PhotoImage(main_photo)
 main_icon = root.iconphoto(True, main_photo_tk)
 
@@ -93,7 +93,7 @@ label.pack()
 interval_section = tk.Frame(root)
 interval_section.pack()
 
-with open("interval.txt", "r") as f: # read the saved interval from previous run
+with open("assets/interval.txt", "r") as f: # read the saved interval from previous run
         interval_from_file = f.read()
         interval = tk.IntVar(root, value = int(interval_from_file))
 
@@ -114,7 +114,7 @@ current_interval.pack()
 
 
 
-image = Image.open("water-drop.png")
+image = Image.open("assets/water-drop.png")
 
 icon = pystray.Icon("main-icon", image, menu = pystray.Menu(
     pystray.MenuItem("Exit app", after_click),
