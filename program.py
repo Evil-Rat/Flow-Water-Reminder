@@ -8,6 +8,8 @@ import threading
 from plyer import notification
 from PIL import Image , ImageTk
 import pystray
+import os
+
 
 
 def hide(event): #hides the gui on clicking minimize
@@ -53,6 +55,9 @@ def set_interval():
 
         current_interval.config(text=f"current interval: {interval.get()} minutes")
 
+        with open("interval.txt", "w") as f:
+            f.write(str(new_interval))
+
 
 
 def call():
@@ -88,7 +93,10 @@ label.pack()
 interval_section = tk.Frame(root)
 interval_section.pack()
 
-interval = tk.IntVar(root, value=20)
+with open("interval.txt", "r") as f: # read the saved interval from previous run
+        interval_from_file = f.read()
+        interval = tk.IntVar(root, value = int(interval_from_file))
+
 
 interval_text= tk.Label(interval_section, text="reminder interval (min) :", font=("Arial",15,"bold"))
 interval_text.pack(side="left")
@@ -126,7 +134,6 @@ threading.Thread(target=check, daemon=True).start()
 
 root.mainloop()
 
-#add dark mode
-#add a function for the current_interval to show hours and minutes
 
-#add tray hide and show ui functionality
+#add a function for the current_interval to show hours and minutes
+# add an option to start as a background app and stay hidden
