@@ -23,5 +23,7 @@ This project used multiple python libraries all of which i will list here
 - threading
 - pillow
 - pystray
+#### p.s
+Don't move the assets folder or anything in it outside the Flow file this could lead to a crash
 #### Credits
 Created by Evil-Rat for a hackathon :D
